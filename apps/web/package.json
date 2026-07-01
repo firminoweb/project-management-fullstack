@@ -1,0 +1,9 @@
+{
+  "name": "@app/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Frontend React + Vite: interface de gerenciamento de projetos.",
+  "scripts": {
+    "dev": "echo \"[web] scaffold do React + Vite será adicionado nos próximos commits\" && exit 0"
+  }
+}

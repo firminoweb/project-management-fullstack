@@ -1,0 +1,9 @@
+{
+  "name": "@app/api",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Backend NestJS: API REST de gerenciamento de projetos.",
+  "scripts": {
+    "dev": "echo \"[api] scaffold do NestJS será adicionado nos próximos commits\" && exit 0"
+  }
+}

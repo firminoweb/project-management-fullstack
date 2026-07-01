@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+
+# Builds
+dist/
+build/
+out/
+.next/
+.vite/
+
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+*.local
+
+# Databases (SQLite)
+*.sqlite
+*.sqlite3
+*.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Coverage / test output
+coverage/
+.nyc_output/
+
+# Editor / OS
+.DS_Store
+.idea/
+.vscode/*
+!.vscode/extensions.json
+Thumbs.db
+
+# Misc
+*.tsbuildinfo
