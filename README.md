@@ -12,6 +12,7 @@ Aplicação web para **gerenciamento simplificado de projetos**: cadastro, consu
 | Backend  | Node.js + NestJS + TypeScript (API REST) |
 | Persistência | SQLite + TypeORM (repository pattern) |
 | IA | Integração real (Claude API) com **fallback** para análise mockada |
+| Documentação | Swagger/OpenAPI (`/docs`) |
 | Monorepo | Yarn Workspaces |
 
 ## Estrutura do monorepo
@@ -53,6 +54,9 @@ yarn dev:api
 yarn dev:web
 ```
 
+Com a API no ar, a **documentação Swagger/OpenAPI** fica em
+`http://localhost:3000/docs`.
+
 ### Configuração da IA (opcional)
 
 A análise inteligente do projeto funciona **sem nenhuma configuração**: sem
@@ -74,8 +78,9 @@ e defina `ANTHROPIC_API_KEY`. A chave nunca é versionada.
 - [x] Cálculo automático de risco (com testes)
 - [x] Máquina de estados de status + bloqueio de exclusão (com testes)
 - [x] Camada de análise com IA (serviço + client + prompt builder + fallback, com testes)
-- [ ] Documentação da API (Swagger/OpenAPI)
-- [ ] Testes das regras principais
+- [x] Documentação da API (Swagger/OpenAPI em `/docs`) + tratamento global de erros
+- [x] Testes das regras principais (risco, status e análise com IA)
+- [ ] Persistência com SQLite + TypeORM (troca do repositório in-memory)
 - [ ] Scaffold do frontend React + Vite
 - [ ] Telas: listagem, formulário, detalhe e análise com IA
 - [ ] Tratamento de loading, erro e estado vazio
