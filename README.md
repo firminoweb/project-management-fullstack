@@ -62,7 +62,7 @@ yarn dev:web
 ## Roadmap de implementação
 
 - [x] Estrutura inicial do monorepo (workspaces + documentação)
-- [ ] Scaffold do backend NestJS
+- [x] Scaffold do backend NestJS (boot, `GET /health`, CORS, ValidationPipe)
 - [ ] Modelo, DTOs e validações de projeto
 - [ ] Cálculo automático de risco
 - [ ] Máquina de estados de status + bloqueio de exclusão
