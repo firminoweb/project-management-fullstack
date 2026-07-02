@@ -10,6 +10,8 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { AiAnalysisService } from './ai/ai-analysis.service';
+import { ProjectAnalysisDto } from './ai/dto/project-analysis.dto';
 import { ChangeStatusDto } from './dto/change-status.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
@@ -18,7 +20,10 @@ import { ProjectsService } from './projects.service';
 
 @Controller('projects')
 export class ProjectsController {
-  constructor(private readonly projectsService: ProjectsService) {}
+  constructor(
+    private readonly projectsService: ProjectsService,
+    private readonly aiAnalysisService: AiAnalysisService,
+  ) {}
 
   @Post()
   async create(@Body() dto: CreateProjectDto): Promise<ProjectResponseDto> {
@@ -54,6 +59,12 @@ export class ProjectsController {
   ): Promise<ProjectResponseDto> {
     const project = await this.projectsService.changeStatus(id, dto.status);
     return ProjectResponseDto.fromEntity(project);
+  }
+
+  @Get(':id/ai-analysis')
+  async analyze(@Param('id') id: string): Promise<ProjectAnalysisDto> {
+    const project = await this.projectsService.findOne(id);
+    return this.aiAnalysisService.analyze(project);
   }
 
   @Delete(':id')

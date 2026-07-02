@@ -53,6 +53,13 @@ yarn dev:api
 yarn dev:web
 ```
 
+### Configuração da IA (opcional)
+
+A análise inteligente do projeto funciona **sem nenhuma configuração**: sem
+`ANTHROPIC_API_KEY`, o endpoint usa um **fallback local** (análise determinística).
+Para ativar a **IA real (Claude)**, copie `apps/api/.env.example` para `apps/api/.env`
+e defina `ANTHROPIC_API_KEY`. A chave nunca é versionada.
+
 ## Documentação
 
 - [`AI_USAGE.md`](./AI_USAGE.md) — como a IA foi utilizada durante o desenvolvimento
@@ -66,7 +73,7 @@ yarn dev:web
 - [x] Modelo, DTOs e validações de projeto + CRUD (`/projects`)
 - [x] Cálculo automático de risco (com testes)
 - [x] Máquina de estados de status + bloqueio de exclusão (com testes)
-- [ ] Camada de análise com IA (serviço + client + prompt builder + fallback)
+- [x] Camada de análise com IA (serviço + client + prompt builder + fallback, com testes)
 - [ ] Documentação da API (Swagger/OpenAPI)
 - [ ] Testes das regras principais
 - [ ] Scaffold do frontend React + Vite
