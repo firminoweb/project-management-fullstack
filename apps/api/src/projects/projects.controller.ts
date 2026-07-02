@@ -10,6 +10,7 @@ import {
   Post,
 } from '@nestjs/common';
 
+import { ChangeStatusDto } from './dto/change-status.dto';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { ProjectResponseDto } from './dto/project-response.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
@@ -43,6 +44,15 @@ export class ProjectsController {
     @Body() dto: UpdateProjectDto,
   ): Promise<ProjectResponseDto> {
     const project = await this.projectsService.update(id, dto);
+    return ProjectResponseDto.fromEntity(project);
+  }
+
+  @Patch(':id/status')
+  async changeStatus(
+    @Param('id') id: string,
+    @Body() dto: ChangeStatusDto,
+  ): Promise<ProjectResponseDto> {
+    const project = await this.projectsService.changeStatus(id, dto.status);
     return ProjectResponseDto.fromEntity(project);
   }
 

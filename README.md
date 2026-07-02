@@ -65,7 +65,7 @@ yarn dev:web
 - [x] Scaffold do backend NestJS (boot, `GET /health`, CORS, ValidationPipe)
 - [x] Modelo, DTOs e validações de projeto + CRUD (`/projects`)
 - [x] Cálculo automático de risco (com testes)
-- [ ] Máquina de estados de status + bloqueio de exclusão
+- [x] Máquina de estados de status + bloqueio de exclusão (com testes)
 - [ ] Camada de análise com IA (serviço + client + prompt builder + fallback)
 - [ ] Documentação da API (Swagger/OpenAPI)
 - [ ] Testes das regras principais

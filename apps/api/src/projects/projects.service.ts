@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,9 +8,13 @@ import {
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
 import { Project } from './entities/project.entity';
-import { ProjectStatus } from './enums/project-status.enum';
+import {
+  PROJECT_STATUS_LABELS,
+  ProjectStatus,
+} from './enums/project-status.enum';
 import { ProjectsRepository } from './projects.repository';
 import { RiskCalculatorService } from './risk/risk-calculator.service';
+import { canTransition, isDeletable } from './status/project-status.machine';
 
 @Injectable()
 export class ProjectsService {
@@ -84,9 +89,35 @@ export class ProjectsService {
     return updated;
   }
 
+  async changeStatus(id: string, target: ProjectStatus): Promise<Project> {
+    const current = await this.findOne(id);
+
+    if (current.status === target) {
+      throw new BadRequestException(
+        `O projeto já está no status "${PROJECT_STATUS_LABELS[target]}".`,
+      );
+    }
+    if (!canTransition(current.status, target)) {
+      throw new BadRequestException(
+        `Transição de status inválida: "${PROJECT_STATUS_LABELS[current.status]}" → "${PROJECT_STATUS_LABELS[target]}".`,
+      );
+    }
+
+    const updated = await this.repository.update(id, { status: target });
+    if (!updated) {
+      throw new NotFoundException(`Projeto ${id} não encontrado`);
+    }
+    return updated;
+  }
+
   async remove(id: string): Promise<void> {
-    await this.findOne(id); // garante 404 quando não existe
-    // O bloqueio de exclusão por status entra junto com a máquina de status.
+    const project = await this.findOne(id); // garante 404 quando não existe
+
+    if (!isDeletable(project.status)) {
+      throw new ConflictException(
+        `Projetos com status "${PROJECT_STATUS_LABELS[project.status]}" não podem ser excluídos.`,
+      );
+    }
     await this.repository.delete(id);
   }
 
