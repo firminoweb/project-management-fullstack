@@ -63,8 +63,8 @@ yarn dev:web
 
 - [x] Estrutura inicial do monorepo (workspaces + documentação)
 - [x] Scaffold do backend NestJS (boot, `GET /health`, CORS, ValidationPipe)
-- [ ] Modelo, DTOs e validações de projeto
-- [ ] Cálculo automático de risco
+- [x] Modelo, DTOs e validações de projeto + CRUD (`/projects`)
+- [x] Cálculo automático de risco (com testes)
 - [ ] Máquina de estados de status + bloqueio de exclusão
 - [ ] Camada de análise com IA (serviço + client + prompt builder + fallback)
 - [ ] Documentação da API (Swagger/OpenAPI)
