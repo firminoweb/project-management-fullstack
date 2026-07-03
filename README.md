@@ -81,6 +81,6 @@ e defina `ANTHROPIC_API_KEY`. A chave nunca é versionada.
 - [x] Documentação da API (Swagger/OpenAPI em `/docs`) + tratamento global de erros
 - [x] Testes das regras principais (risco, status e análise com IA)
 - [x] Persistência com SQLite + TypeORM (troca do repositório in-memory)
-- [ ] Scaffold do frontend React + Vite
-- [ ] Telas: listagem, formulário, detalhe e análise com IA
-- [ ] Tratamento de loading, erro e estado vazio
+- [x] Scaffold do frontend React + Vite (Router + React Query + design system)
+- [x] Telas: listagem, formulário (criar/editar), detalhe e análise com IA
+- [x] Tratamento de loading, erro e estado vazio
