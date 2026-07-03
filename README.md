@@ -80,7 +80,7 @@ e defina `ANTHROPIC_API_KEY`. A chave nunca é versionada.
 - [x] Camada de análise com IA (serviço + client + prompt builder + fallback, com testes)
 - [x] Documentação da API (Swagger/OpenAPI em `/docs`) + tratamento global de erros
 - [x] Testes das regras principais (risco, status e análise com IA)
-- [ ] Persistência com SQLite + TypeORM (troca do repositório in-memory)
+- [x] Persistência com SQLite + TypeORM (troca do repositório in-memory)
 - [ ] Scaffold do frontend React + Vite
 - [ ] Telas: listagem, formulário, detalhe e análise com IA
 - [ ] Tratamento de loading, erro e estado vazio
