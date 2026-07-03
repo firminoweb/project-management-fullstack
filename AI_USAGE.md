@@ -94,5 +94,6 @@ Registro representativo dos prompts mais relevantes:
   ao escopo do desafio, mas não recomendado para produção.
 - Sem autenticação/autorização (fora do escopo).
 - A análise de IA não é persistida — é gerada sob demanda a cada chamada.
-- Testes automatizados de frontend ainda não incluídos (backend coberto por
-  testes unitários das regras principais).
+- Testes de frontend (Vitest + Testing Library) cobrem componentes e estados
+  críticos (formulário/validação, badges, estados e listagem); fluxos ponta a
+  ponta de UI (e2e) não estão cobertos.

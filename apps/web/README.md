@@ -36,6 +36,13 @@ VITE_API_URL=http://localhost:3000
 - `yarn workspace @app/web dev` — servidor de desenvolvimento
 - `yarn workspace @app/web build` — typecheck (`tsc`) + build de produção
 - `yarn workspace @app/web preview` — pré-visualiza o build
+- `yarn workspace @app/web test` — testes (Vitest + Testing Library)
+
+## Testes
+
+- **Vitest + Testing Library** (ambiente `jsdom`)
+- Cobrem: validação do formulário, render de badges de status/risco, estados de
+  loading/erro/vazio e a listagem (com a API mockada)
 
 ## Organização
 
