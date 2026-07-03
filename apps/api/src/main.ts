@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
+import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -26,6 +27,9 @@ async function bootstrap() {
 
   // Tratamento centralizado de erros.
   app.useGlobalFilters(new AllExceptionsFilter());
+
+  // Log de cada requisição HTTP (método, rota, status, tempo).
+  app.useGlobalInterceptors(new LoggingInterceptor());
 
   // Documentação OpenAPI/Swagger em /docs.
   const swaggerConfig = new DocumentBuilder()

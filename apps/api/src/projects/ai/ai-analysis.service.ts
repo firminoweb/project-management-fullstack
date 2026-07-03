@@ -31,6 +31,9 @@ export class AiAnalysisService {
     };
 
     if (!this.aiClient.isEnabled()) {
+      this.logger.log(
+        `Análise via fallback (IA não configurada) para projeto ${project.id}.`,
+      );
       return this.withFallback(
         project,
         base,
@@ -43,6 +46,9 @@ export class AiAnalysisService {
       const raw = await this.aiClient.complete(prompt);
       const content = this.parse(raw);
       const { provider, model } = this.aiClient.describe();
+      this.logger.log(
+        `Análise gerada via IA (${provider}/${model}) para projeto ${project.id}.`,
+      );
       return { ...base, ...content, source: 'ai', provider, model };
     } catch (error) {
       const reason = error instanceof Error ? error.message : String(error);
