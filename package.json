@@ -15,6 +15,10 @@
     "dev:web": "yarn workspace @app/web dev",
     "build:api": "yarn workspace @app/api build",
     "build:web": "yarn workspace @app/web build",
-    "test:api": "yarn workspace @app/api test"
+    "test:api": "yarn workspace @app/api test",
+    "test:e2e:api": "yarn workspace @app/api test:e2e",
+    "test:web": "yarn workspace @app/web test",
+    "test:cov:api": "yarn workspace @app/api test:cov",
+    "test:cov:web": "yarn workspace @app/web test:cov"
   }
 }

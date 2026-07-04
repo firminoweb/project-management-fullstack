@@ -1,10 +1,10 @@
-import { Project } from '../entities/project.entity';
-import { ProjectStatus } from '../enums/project-status.enum';
-import { RiskLevel } from '../enums/risk-level.enum';
-import { AiAnalysisService } from './ai-analysis.service';
-import { AiClient, AiPrompt } from './ai-client';
-import { ProjectAnalysisFallback } from './project-analysis.fallback';
-import { ProjectAnalysisPromptBuilder } from './project-analysis.prompt-builder';
+import { Project } from '@src/projects/entities/project.entity';
+import { ProjectStatus } from '@src/projects/enums/project-status.enum';
+import { RiskLevel } from '@src/projects/enums/risk-level.enum';
+import { AiAnalysisService } from '@src/projects/ai/ai-analysis.service';
+import { AiClient, AiPrompt } from '@src/projects/ai/ai-client';
+import { ProjectAnalysisFallback } from '@src/projects/ai/project-analysis.fallback';
+import { ProjectAnalysisPromptBuilder } from '@src/projects/ai/project-analysis.prompt-builder';
 
 const project: Project = {
   id: 'p1',

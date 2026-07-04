@@ -1,5 +1,8 @@
-import { ProjectStatus } from '../enums/project-status.enum';
-import { canTransition, isDeletable } from './project-status.machine';
+import { ProjectStatus } from '@src/projects/enums/project-status.enum';
+import {
+  canTransition,
+  isDeletable,
+} from '@src/projects/status/project-status.machine';
 
 describe('project status machine', () => {
   describe('canTransition', () => {

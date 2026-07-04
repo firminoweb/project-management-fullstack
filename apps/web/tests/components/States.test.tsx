@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import { EmptyState, ErrorState } from './States';
+import { EmptyState, ErrorState } from '@/components/States';
 
 describe('ErrorState', () => {
   it('mostra a mensagem e dispara onRetry ao clicar', async () => {

@@ -1,5 +1,8 @@
-import { RiskLevel } from '../enums/risk-level.enum';
-import { RiskCalculatorService, monthsBetween } from './risk-calculator.service';
+import { RiskLevel } from '@src/projects/enums/risk-level.enum';
+import {
+  RiskCalculatorService,
+  monthsBetween,
+} from '@src/projects/risk/risk-calculator.service';
 
 describe('RiskCalculatorService', () => {
   const calc = new RiskCalculatorService();

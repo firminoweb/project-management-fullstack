@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 
-import { formatCurrency, formatDate } from './format';
+import { formatCurrency, formatDate, formatDateTime } from '@/lib/format';
 
 describe('formatCurrency', () => {
   it('formata número como moeda brasileira (R$)', () => {
@@ -17,5 +17,19 @@ describe('formatDate', () => {
 
   it('aceita timestamp ISO completo', () => {
     expect(formatDate('2026-12-31T23:00:00.000Z')).toBe('31/12/2026');
+  });
+
+  it('devolve a entrada quando não é uma data ISO', () => {
+    expect(formatDate('sem-data')).toBe('sem-data');
+  });
+});
+
+describe('formatDateTime', () => {
+  it('formata um timestamp ISO como data e hora', () => {
+    expect(formatDateTime('2026-01-05T13:30:00.000Z')).toMatch(/2026/);
+  });
+
+  it('devolve a entrada para valor inválido', () => {
+    expect(formatDateTime('nao-e-data')).toBe('nao-e-data');
   });
 });

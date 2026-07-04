@@ -2,8 +2,8 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
 
-import type { Project } from '../types/project';
-import { ProjectForm, type ProjectFormProps } from './ProjectForm';
+import type { Project } from '@/types/project';
+import { ProjectForm, type ProjectFormProps } from '@/components/ProjectForm';
 
 function setup(overrides: Partial<ProjectFormProps> = {}) {
   const onSubmit = vi.fn();

@@ -29,4 +29,36 @@ controller → service → repository (TypeORM/SQLite)
 | PATCH  | /projects/:id/status   | Avançar / cancelar status |
 | GET    | /projects/:id/ai-analysis | Análise com apoio de IA |
 
-> Scaffold completo do NestJS será adicionado nos próximos commits.
+Documentação interativa (Swagger/OpenAPI) disponível em `/docs`.
+
+## Testes
+
+Os testes ficam em `test/`, separados do código-fonte e espelhando a estrutura
+de `src/` (imports usam o alias `@src/*`):
+
+```
+test/
+  unit/          # testes unitários (Jest)
+    common/      #   filtro de erros, interceptor de log
+    projects/    #   service, risco, status, IA (fallback, prompt, client)
+  e2e/           # fluxo HTTP completo (supertest + SQLite :memory:)
+  jest.json      # configuração única do Jest
+```
+
+```bash
+yarn workspace @app/api test       # unitários
+yarn workspace @app/api test:e2e   # e2e
+yarn workspace @app/api test:cov   # unit + e2e com cobertura (thresholds mínimos)
+```
+
+Cobertura atual: ~96% de linhas/statements. Os thresholds mínimos são
+verificados em `test:cov` (falha o comando se a cobertura cair).
+
+## Configuração (variáveis de ambiente)
+
+Copie `.env.example` para `.env`. Principais chaves:
+
+- `PORT` (padrão `3000`), `CORS_ORIGIN`
+- `DATABASE_PATH` — caminho do arquivo SQLite (padrão `data/app.sqlite`)
+- `ANTHROPIC_API_KEY` — sem ela, a análise usa o fallback local
+- `ANTHROPIC_MODEL` — modelo da análise (padrão `claude-opus-4-8`)

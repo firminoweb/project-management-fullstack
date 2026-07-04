@@ -1,12 +1,12 @@
 import { screen } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
-import { projectsApi } from '../api/projects';
-import { renderWithProviders } from '../test/utils';
-import type { Project } from '../types/project';
-import { ProjectsListPage } from './ProjectsListPage';
+import { projectsApi } from '@/api/projects';
+import { renderWithProviders } from '../utils';
+import type { Project } from '@/types/project';
+import { ProjectsListPage } from '@/pages/ProjectsListPage';
 
-vi.mock('../api/projects', () => ({
+vi.mock('@/api/projects', () => ({
   projectsApi: {
     list: vi.fn(),
   },

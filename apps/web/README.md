@@ -37,12 +37,27 @@ VITE_API_URL=http://localhost:3000
 - `yarn workspace @app/web build` — typecheck (`tsc`) + build de produção
 - `yarn workspace @app/web preview` — pré-visualiza o build
 - `yarn workspace @app/web test` — testes (Vitest + Testing Library)
+- `yarn workspace @app/web test:cov` — testes com cobertura (thresholds mínimos)
 
 ## Testes
 
-- **Vitest + Testing Library** (ambiente `jsdom`)
-- Cobrem: validação do formulário, render de badges de status/risco, estados de
-  loading/erro/vazio e a listagem (com a API mockada)
+**Vitest + Testing Library** (ambiente `jsdom`). Ficam em `tests/`, separados do
+código-fonte e espelhando a estrutura de `src/` (imports usam o alias `@`):
+
+```
+tests/
+  api/          # cliente HTTP e endpoints (fetch mockado)
+  components/   # badges, estados, formulário
+  pages/        # listagem, criar, editar e detalhe (React Query + Router)
+  fixtures.ts   # projeto de exemplo
+  utils.tsx     # render com providers
+  setup.ts      # matchers do jest-dom
+```
+
+Cobrem validação de formulário, camada de API, hooks de dados, render de
+badges/estados e o fluxo das páginas (criar, editar, avançar status, análise de
+IA e exclusão). Cobertura atual: ~97% de linhas. Os thresholds mínimos são
+verificados em `test:cov`.
 
 ## Organização
 

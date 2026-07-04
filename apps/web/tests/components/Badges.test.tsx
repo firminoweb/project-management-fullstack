@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import { describe, expect, it } from 'vitest';
 
-import { RiskBadge, StatusBadge } from './Badges';
+import { RiskBadge, StatusBadge } from '@/components/Badges';
 
 describe('StatusBadge', () => {
   it('usa o rótulo padrão do status quando nenhum é passado', () => {
