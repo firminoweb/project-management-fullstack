@@ -7,6 +7,9 @@ import { ProjectStatus } from '../enums/project-status.enum';
  * status atual) é verificada na camada de serviço pela máquina de status.
  */
 export class ChangeStatusDto {
-  @IsEnum(ProjectStatus)
+  @IsEnum(ProjectStatus, {
+    message:
+      'Status inválido. Valores aceitos: EM_ANALISE, APROVADO, EM_ANDAMENTO, ENCERRADO, CANCELADO.',
+  })
   status: ProjectStatus;
 }

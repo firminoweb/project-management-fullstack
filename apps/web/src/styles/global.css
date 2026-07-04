@@ -534,6 +534,25 @@ textarea.field__control {
   font-size: 0.82rem;
 }
 
+.field__meta {
+  display: flex;
+  gap: var(--space-3);
+  align-items: baseline;
+}
+
+.field__counter {
+  margin-left: auto;
+  font-size: 0.78rem;
+  color: var(--text-subtle);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.field__counter[data-limit='true'] {
+  color: var(--danger);
+  font-weight: 600;
+}
+
 .form-actions {
   display: flex;
   gap: var(--space-3);

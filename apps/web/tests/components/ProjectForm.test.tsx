@@ -20,6 +20,9 @@ function setup(overrides: Partial<ProjectFormProps> = {}) {
   return { onSubmit, onCancel };
 }
 
+const submitButton = () =>
+  screen.getByRole('button', { name: 'Criar projeto' });
+
 function fillValid() {
   fireEvent.change(screen.getByLabelText(/nome/i), {
     target: { value: 'Portal' },
@@ -36,48 +39,76 @@ function fillValid() {
 }
 
 describe('ProjectForm', () => {
-  it('valida campos obrigatórios e não chama onSubmit', async () => {
-    const { onSubmit } = setup();
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Criar projeto' }),
-    );
-
-    expect(screen.getByText('Informe o nome do projeto.')).toBeInTheDocument();
-    expect(onSubmit).not.toHaveBeenCalled();
+  it('mantém o envio desabilitado enquanto o formulário é inválido', () => {
+    setup();
+    expect(submitButton()).toBeDisabled();
   });
 
-  it('exige término posterior ao início', async () => {
+  it('habilita o envio quando todos os campos ficam válidos', () => {
+    setup();
+    fillValid();
+    expect(submitButton()).toBeEnabled();
+  });
+
+  it('valida em tempo real ao tocar um campo inválido (sem submeter)', () => {
+    setup();
+    const nome = screen.getByLabelText(/nome/i);
+    fireEvent.change(nome, { target: { value: 'Portal' } });
+    fireEvent.change(nome, { target: { value: '' } });
+
+    expect(screen.getByText('Informe o nome do projeto.')).toBeInTheDocument();
+  });
+
+  it('exige término posterior ao início e mantém o envio desabilitado', () => {
     const { onSubmit } = setup();
     fillValid();
     fireEvent.change(screen.getByLabelText(/término/i), {
       target: { value: '2026-01-01' },
     });
 
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Criar projeto' }),
-    );
-
     expect(
       screen.getByText('O término deve ser posterior à data de início.'),
     ).toBeInTheDocument();
+    expect(submitButton()).toBeDisabled();
     expect(onSubmit).not.toHaveBeenCalled();
   });
 
-  it('rejeita orçamento não positivo', async () => {
-    const { onSubmit } = setup();
+  it('rejeita orçamento não positivo em tempo real', () => {
+    setup();
     fillValid();
     fireEvent.change(screen.getByLabelText(/orçamento/i), {
       target: { value: '-5' },
     });
 
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Criar projeto' }),
-    );
-
     expect(
       screen.getByText('O orçamento deve ser um valor positivo.'),
     ).toBeInTheDocument();
-    expect(onSubmit).not.toHaveBeenCalled();
+    expect(submitButton()).toBeDisabled();
+  });
+
+  it('exibe o contador de caracteres de nome e descrição', () => {
+    setup();
+    fireEvent.change(screen.getByLabelText(/nome/i), {
+      target: { value: 'Portal' },
+    });
+    fireEvent.change(screen.getByLabelText(/descrição/i), {
+      target: { value: 'abc' },
+    });
+    expect(screen.getByText('6/120')).toBeInTheDocument();
+    expect(screen.getByText('3/2000')).toBeInTheDocument();
+  });
+
+  it('revela erros de obrigatórios ao sair dos campos (onBlur)', () => {
+    setup();
+    fireEvent.blur(screen.getByLabelText(/nome/i));
+    fireEvent.blur(screen.getByLabelText(/descrição/i));
+    fireEvent.blur(screen.getByLabelText(/início/i));
+    fireEvent.blur(screen.getByLabelText(/término/i));
+    fireEvent.blur(screen.getByLabelText(/orçamento/i));
+
+    expect(screen.getByText('Informe o nome do projeto.')).toBeInTheDocument();
+    expect(screen.getByText('Informe a data de início.')).toBeInTheDocument();
+    expect(screen.getByText('Informe o orçamento.')).toBeInTheDocument();
   });
 
   it('envia os dados normalizados quando o formulário é válido', async () => {
@@ -95,9 +126,7 @@ describe('ProjectForm', () => {
       target: { value: '15000.50' },
     });
 
-    await userEvent.click(
-      screen.getByRole('button', { name: 'Criar projeto' }),
-    );
+    await userEvent.click(submitButton());
 
     expect(onSubmit).toHaveBeenCalledWith({
       name: 'Portal',

@@ -1,9 +1,10 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import { INestApplication } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import request from 'supertest';
 
 import { AppModule } from '@src/app.module';
 import { AllExceptionsFilter } from '@src/common/filters/all-exceptions.filter';
+import { buildValidationPipe } from '@src/common/validation-pipe.factory';
 
 /**
  * Teste ponta a ponta do fluxo de projetos, subindo o AppModule inteiro
@@ -24,13 +25,7 @@ describe('Projects API (e2e)', () => {
     }).compile();
 
     app = moduleRef.createNestApplication();
-    app.useGlobalPipes(
-      new ValidationPipe({
-        whitelist: true,
-        forbidNonWhitelisted: true,
-        transform: true,
-      }),
-    );
+    app.useGlobalPipes(buildValidationPipe());
     app.useGlobalFilters(new AllExceptionsFilter());
     await app.init();
   });
@@ -60,8 +55,34 @@ describe('Projects API (e2e)', () => {
     expect(res.body).toEqual([]);
   });
 
-  it('POST /projects com corpo inválido → 400', async () => {
-    await request(app.getHttpServer()).post('/projects').send({}).expect(400);
+  it('POST /projects com corpo inválido → 400 com mensagens em PT-BR', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/projects')
+      .send({})
+      .expect(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('O nome é obrigatório.'),
+      ]),
+    );
+  });
+
+  it('POST /projects com campo não permitido → 400 (whitelist em PT-BR)', async () => {
+    const res = await request(app.getHttpServer())
+      .post('/projects')
+      .send({
+        name: 'X',
+        startDate: '2026-01-01',
+        endDate: '2026-02-01',
+        budget: 10,
+        status: 'APROVADO',
+      })
+      .expect(400);
+    expect(res.body.message).toEqual(
+      expect.arrayContaining([
+        expect.stringContaining('Campo não permitido: "status".'),
+      ]),
+    );
   });
 
   it('POST /projects → 201 com status inicial e risco calculado', async () => {

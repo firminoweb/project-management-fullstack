@@ -16,7 +16,7 @@ export function ProjectCreatePage() {
         <div>
           <h1 className="page-head__title">Novo projeto</h1>
           <p className="page-head__subtitle">
-            O projeto começa com status “Em análise” e risco calculado
+            O projeto começa com status "Em análise" e risco calculado
             automaticamente.
           </p>
         </div>

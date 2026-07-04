@@ -2,6 +2,9 @@ import { type FormEvent, useState } from 'react';
 
 import type { CreateProjectInput, Project } from '../types/project';
 
+const NAME_MAX = 120;
+const DESCRIPTION_MAX = 2000;
+
 export interface ProjectFormProps {
   initial?: Project;
   submitLabel: string;
@@ -20,6 +23,15 @@ interface FormState {
 }
 
 type FieldErrors = Partial<Record<keyof FormState, string>>;
+type TouchedFields = Record<keyof FormState, boolean>;
+
+const NOT_TOUCHED: TouchedFields = {
+  name: false,
+  description: false,
+  startDate: false,
+  endDate: false,
+  budget: false,
+};
 
 function buildInitialState(project?: Project): FormState {
   return {
@@ -36,12 +48,12 @@ function validate(state: FormState): FieldErrors {
 
   if (!state.name.trim()) {
     errors.name = 'Informe o nome do projeto.';
-  } else if (state.name.trim().length > 120) {
-    errors.name = 'O nome deve ter no máximo 120 caracteres.';
+  } else if (state.name.trim().length > NAME_MAX) {
+    errors.name = `O nome deve ter no máximo ${NAME_MAX} caracteres.`;
   }
 
-  if (state.description.length > 2000) {
-    errors.description = 'A descrição deve ter no máximo 2000 caracteres.';
+  if (state.description.length > DESCRIPTION_MAX) {
+    errors.description = `A descrição deve ter no máximo ${DESCRIPTION_MAX} caracteres.`;
   }
 
   if (!state.startDate) {
@@ -75,23 +87,30 @@ export function ProjectForm({
   onCancel,
 }: ProjectFormProps) {
   const [state, setState] = useState<FormState>(() => buildInitialState(initial));
-  const [errors, setErrors] = useState<FieldErrors>({});
-  const [touched, setTouched] = useState(false);
+  const [touched, setTouched] = useState<TouchedFields>(NOT_TOUCHED);
+  const [submitAttempted, setSubmitAttempted] = useState(false);
+
+  // Validação em tempo real: recalculada a cada render.
+  const errors = validate(state);
+  const isValid = Object.keys(errors).length === 0;
+
+  // Um erro só é exibido depois que o campo é tocado ou após tentar enviar.
+  const errorOf = (key: keyof FormState) =>
+    touched[key] || submitAttempted ? errors[key] : undefined;
 
   function update<K extends keyof FormState>(key: K, value: string) {
-    setState((prev) => {
-      const next = { ...prev, [key]: value };
-      if (touched) setErrors(validate(next));
-      return next;
-    });
+    setState((prev) => ({ ...prev, [key]: value }));
+    setTouched((prev) => ({ ...prev, [key]: true }));
+  }
+
+  function markTouched(key: keyof FormState) {
+    setTouched((prev) => ({ ...prev, [key]: true }));
   }
 
   function handleSubmit(event: FormEvent) {
     event.preventDefault();
-    setTouched(true);
-    const validation = validate(state);
-    setErrors(validation);
-    if (Object.keys(validation).length > 0) return;
+    setSubmitAttempted(true);
+    if (!isValid) return;
 
     onSubmit({
       name: state.name.trim(),
@@ -101,6 +120,12 @@ export function ProjectForm({
       budget: Number(state.budget),
     });
   }
+
+  const nameError = errorOf('name');
+  const descriptionError = errorOf('description');
+  const startDateError = errorOf('startDate');
+  const endDateError = errorOf('endDate');
+  const budgetError = errorOf('budget');
 
   return (
     <form className="form" onSubmit={handleSubmit} noValidate>
@@ -114,12 +139,21 @@ export function ProjectForm({
           id="name"
           className="field__control"
           value={state.name}
-          maxLength={120}
+          maxLength={NAME_MAX}
           onChange={(e) => update('name', e.target.value)}
-          aria-invalid={Boolean(errors.name)}
+          onBlur={() => markTouched('name')}
+          aria-invalid={Boolean(nameError)}
           placeholder="Ex.: Portal do cliente"
         />
-        {errors.name && <span className="field__error">{errors.name}</span>}
+        <div className="field__meta">
+          {nameError && <span className="field__error">{nameError}</span>}
+          <span
+            className="field__counter"
+            data-limit={state.name.length >= NAME_MAX}
+          >
+            {state.name.length}/{NAME_MAX}
+          </span>
+        </div>
       </div>
 
       <div className="field">
@@ -130,14 +164,23 @@ export function ProjectForm({
           id="description"
           className="field__control"
           value={state.description}
-          maxLength={2000}
+          maxLength={DESCRIPTION_MAX}
           onChange={(e) => update('description', e.target.value)}
-          aria-invalid={Boolean(errors.description)}
+          onBlur={() => markTouched('description')}
+          aria-invalid={Boolean(descriptionError)}
           placeholder="Objetivo, escopo e contexto do projeto…"
         />
-        {errors.description && (
-          <span className="field__error">{errors.description}</span>
-        )}
+        <div className="field__meta">
+          {descriptionError && (
+            <span className="field__error">{descriptionError}</span>
+          )}
+          <span
+            className="field__counter"
+            data-limit={state.description.length >= DESCRIPTION_MAX}
+          >
+            {state.description.length}/{DESCRIPTION_MAX}
+          </span>
+        </div>
       </div>
 
       <div className="form-row">
@@ -151,10 +194,11 @@ export function ProjectForm({
             className="field__control"
             value={state.startDate}
             onChange={(e) => update('startDate', e.target.value)}
-            aria-invalid={Boolean(errors.startDate)}
+            onBlur={() => markTouched('startDate')}
+            aria-invalid={Boolean(startDateError)}
           />
-          {errors.startDate && (
-            <span className="field__error">{errors.startDate}</span>
+          {startDateError && (
+            <span className="field__error">{startDateError}</span>
           )}
         </div>
 
@@ -168,10 +212,11 @@ export function ProjectForm({
             className="field__control"
             value={state.endDate}
             onChange={(e) => update('endDate', e.target.value)}
-            aria-invalid={Boolean(errors.endDate)}
+            onBlur={() => markTouched('endDate')}
+            aria-invalid={Boolean(endDateError)}
           />
-          {errors.endDate && (
-            <span className="field__error">{errors.endDate}</span>
+          {endDateError && (
+            <span className="field__error">{endDateError}</span>
           )}
         </div>
       </div>
@@ -188,10 +233,11 @@ export function ProjectForm({
           className="field__control"
           value={state.budget}
           onChange={(e) => update('budget', e.target.value)}
-          aria-invalid={Boolean(errors.budget)}
+          onBlur={() => markTouched('budget')}
+          aria-invalid={Boolean(budgetError)}
           placeholder="Ex.: 50000.00"
         />
-        {errors.budget && <span className="field__error">{errors.budget}</span>}
+        {budgetError && <span className="field__error">{budgetError}</span>}
         <span className="hint">
           O nível de risco é calculado automaticamente a partir do orçamento e do
           prazo.
@@ -202,7 +248,7 @@ export function ProjectForm({
         <button
           type="submit"
           className="btn btn--primary"
-          disabled={submitting}
+          disabled={submitting || !isValid}
         >
           {submitting ? 'Salvando…' : submitLabel}
         </button>

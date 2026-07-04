@@ -1,4 +1,3 @@
-import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
@@ -6,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { AllExceptionsFilter } from './common/filters/all-exceptions.filter';
 import { LoggingInterceptor } from './common/interceptors/logging.interceptor';
+import { buildValidationPipe } from './common/validation-pipe.factory';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,14 +16,8 @@ async function bootstrap() {
     origin: config.get<string>('CORS_ORIGIN') ?? true,
   });
 
-  // Validação e sanitização automática dos DTOs de entrada.
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-    }),
-  );
+  // Validação e sanitização automática dos DTOs de entrada (mensagens em PT-BR).
+  app.useGlobalPipes(buildValidationPipe());
 
   // Tratamento centralizado de erros.
   app.useGlobalFilters(new AllExceptionsFilter());

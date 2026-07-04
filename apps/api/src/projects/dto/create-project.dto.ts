@@ -14,23 +14,36 @@ import {
  * e o risco é calculado automaticamente.
  */
 export class CreateProjectDto {
-  @IsString()
-  @IsNotEmpty()
-  @MaxLength(120)
+  @IsString({ message: 'O nome deve ser um texto.' })
+  @IsNotEmpty({ message: 'O nome é obrigatório.' })
+  @MaxLength(120, { message: 'O nome deve ter no máximo 120 caracteres.' })
   name: string;
 
-  @IsString()
+  @IsString({ message: 'A descrição deve ser um texto.' })
   @IsOptional()
-  @MaxLength(2000)
+  @MaxLength(2000, {
+    message: 'A descrição deve ter no máximo 2000 caracteres.',
+  })
   description?: string;
 
-  @IsDateString()
+  @IsDateString(
+    {},
+    { message: 'A data de início deve ser uma data válida (YYYY-MM-DD).' },
+  )
   startDate: string;
 
-  @IsDateString()
+  @IsDateString(
+    {},
+    {
+      message: 'A previsão de término deve ser uma data válida (YYYY-MM-DD).',
+    },
+  )
   endDate: string;
 
-  @IsNumber({ maxDecimalPlaces: 2 })
-  @IsPositive()
+  @IsNumber(
+    { maxDecimalPlaces: 2 },
+    { message: 'O orçamento deve ser um número com no máximo 2 casas decimais.' },
+  )
+  @IsPositive({ message: 'O orçamento deve ser um valor positivo.' })
   budget: number;
 }
