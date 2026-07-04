@@ -17,7 +17,7 @@ controller → service → repository (TypeORM/SQLite)
                     ↘ ai/ (AiAnalysisService · AiClient · ProjectAnalysisPromptBuilder)
 ```
 
-## Endpoints previstos
+## Endpoints
 
 | Método | Rota | Descrição |
 | ------ | ---- | --------- |
