@@ -41,21 +41,44 @@ project-management-fullstack/
 
 ## Como executar
 
-> ⚙️ Instruções detalhadas de execução serão adicionadas conforme os apps `api` e `web` forem implementados.
+### Local (Yarn)
 
 ```bash
 # Instalar dependências de todo o monorepo
 yarn install
 
-# Rodar o backend (porta padrão do NestJS)
+# Rodar o backend (NestJS em http://localhost:3000)
 yarn dev:api
 
-# Rodar o frontend (Vite)
+# Rodar o frontend (Vite em http://localhost:5173)
 yarn dev:web
 ```
 
 Com a API no ar, a **documentação Swagger/OpenAPI** fica em
 `http://localhost:3000/docs`.
+
+### Com Docker (um comando)
+
+```bash
+docker compose up --build
+```
+
+- Web em `http://localhost:8080` · API em `http://localhost:3000` (Swagger em `/docs`)
+- O SQLite é persistido em um volume nomeado (`api_data`)
+- Para IA real, exporte `ANTHROPIC_API_KEY` (ou use um `.env` na raiz) antes de subir; sem ela, a análise usa o fallback local
+
+## Testes e cobertura
+
+```bash
+yarn test:api        # unitários (Jest)      · yarn test:cov:api  (com cobertura)
+yarn test:e2e:api    # e2e (supertest)
+yarn test:web        # Vitest + Testing Lib  · yarn test:cov:web  (com cobertura)
+```
+
+Os testes ficam em pastas dedicadas (`apps/api/test/`, `apps/web/tests/`),
+com thresholds mínimos de cobertura verificados nos comandos `test:cov`
+(~96% na API, ~97% no web). O **CI (GitHub Actions)** roda build + `test:cov`
+dos dois apps a cada push/PR.
 
 ### Configuração da IA (opcional)
 
@@ -84,3 +107,6 @@ e defina `ANTHROPIC_API_KEY`. A chave nunca é versionada.
 - [x] Scaffold do frontend React + Vite (Router + React Query + design system)
 - [x] Telas: listagem, formulário (criar/editar), detalhe e análise com IA
 - [x] Tratamento de loading, erro e estado vazio
+- [x] Testes de frontend (Vitest + Testing Library) e e2e do backend (supertest)
+- [x] Cobertura de testes com thresholds (~96% API · ~97% web)
+- [x] Docker (API + web) com `docker compose` e CI no GitHub Actions

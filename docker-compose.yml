@@ -1,0 +1,33 @@
+# Sobe API + Web com um comando:
+#   docker compose up --build
+# Web em http://localhost:8080 · API em http://localhost:3000 (Swagger em /docs)
+services:
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      PORT: "3000"
+      CORS_ORIGIN: "http://localhost:8080"
+      DATABASE_PATH: "data/app.sqlite"
+      # Sem chave => análise usa o fallback local. Defina no seu .env para IA real.
+      ANTHROPIC_API_KEY: "${ANTHROPIC_API_KEY:-}"
+      ANTHROPIC_MODEL: "${ANTHROPIC_MODEL:-claude-opus-4-8}"
+    volumes:
+      - api_data:/app/apps/api/data
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile
+      args:
+        VITE_API_URL: "http://localhost:3000"
+    ports:
+      - "8080:80"
+    depends_on:
+      - api
+
+volumes:
+  api_data:

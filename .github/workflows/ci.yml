@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  test:
+    name: build + testes (cobertura)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: yarn
+
+      - name: Instalar dependências
+        run: yarn install --frozen-lockfile
+
+      - name: API — build
+        run: yarn build:api
+
+      - name: API — testes + cobertura
+        run: yarn test:cov:api
+
+      - name: Web — build
+        run: yarn build:web
+
+      - name: Web — testes + cobertura
+        run: yarn test:cov:web
